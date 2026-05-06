@@ -8,29 +8,58 @@ import Workshop from "./pages/Workshop";
 import Seminar from "./pages/Seminar";
 import MainLayaout from "./layouts/MainLayout";
 import AuthLayout from "./layouts/AuthLayout";
-
-
+import DashboardIndex from "./pages/dashboard/DashboardIndex";
+import ProtectedRoute from "./routes/ProtectedRoute";
+import DashboardLayout from "./layouts/DashboardLayout";
+import CategoryIndex from "./pages/dashboard/category/CategoryIndex";
+import PembicaIndex from "./pages/dashboard/pembicara/PembicaraIndex";
+import CategoryCreate from "./pages/dashboard/category/CategoryCreate";
+import PembicaraCreate from "./pages/dashboard/pembicara/PembicaraCreate";
+import EventIndex from "./pages/dashboard/event/EventIndex";
+import EventCreate from "./pages/dashboard/event/EventCreate";
 
 function App() {
-  return(
-   <BrowserRouter>
-    <Routes>
-      <Route element={<MainLayaout/>}>
-        <Route path="/" element={<Homepage/>} />
-        <Route path="/competition" element={<Competition/>} />
-        <Route path="/seminar" element={<Seminar/>} />
-        <Route path="/talkshow" element={<Talkshow/>} />
-        <Route path="/workshop" element={<Workshop/>} />
-      </Route>
+  return (
+    <BrowserRouter>
+      <Routes>
+        <Route element={<MainLayaout />}>
+          <Route path="/" element={<Homepage />} />
+          <Route path="/competition" element={<Competition />} />
+          <Route path="/seminar" element={<Seminar />} />
+          <Route path="/talkshow" element={<Talkshow />} />
+          <Route path="/workshop" element={<Workshop />} />
+        </Route>
 
-      {/*Login dan register*/}
-      <Route element={<AuthLayout/>}>
-        <Route path="/login" element={<LoginForm />}/>
-        <Route path="/register" element={<RegisterForm />}/>
-      </Route>
-    </Routes>
-   </BrowserRouter>
-  )
-};
+        {/*Login dan register*/}
+        <Route element={<AuthLayout />}>
+          <Route path="/login" element={<LoginForm />} />
+          <Route path="/register" element={<RegisterForm />} />
+        </Route>
+
+        {/* Hlaman yang bisa diakses jika sudah login*/}
+        <Route element={<ProtectedRoute />}>
+          <Route element={<DashboardLayout />}>
+            <Route path="/dashboard" element={<DashboardIndex />} />
+
+            <Route path="/dashboard/category" element={<CategoryIndex />} />
+            <Route
+              path="/dashboard/category/create"
+              element={<CategoryCreate />}
+            />
+
+            <Route path="/dashboard/pembicara" element={<PembicaIndex />} />
+            <Route
+              path="/dashboard/pembicara/create"
+              element={<PembicaraCreate />}
+            />
+
+            <Route path="/dashboard/event" element={<EventIndex />} />
+            <Route path="/dashboard/event/create" element={<EventCreate />} />
+          </Route>
+        </Route>
+      </Routes>
+    </BrowserRouter>
+  );
+}
 
 export default App;

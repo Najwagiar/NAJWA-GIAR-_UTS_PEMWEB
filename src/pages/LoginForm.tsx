@@ -5,7 +5,9 @@ import { InputPassword } from "../components/ui/InputPassword";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import Button from "../components/ui/Button";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+
+import { useAuthStore } from "../store/useAuthStore";
 
 const schema = z.object({
     email: z.string().email({ message: "Email harus diisi dengan benar" }),
@@ -18,6 +20,9 @@ interface FormData {
 }
 
 export default function LoginForm() {
+    const navigate = useNavigate();
+    const login = useAuthStore((state) => state.login)
+
     // const [email, setEmail] = useState<string>("");
     // const [password, setPassword] = useState<string>("");
     const { register, handleSubmit, formState: { errors },
@@ -28,6 +33,17 @@ export default function LoginForm() {
 
     const onSubmit = (data: FormData) => {
         console.log(data);
+        if(data.email == "najwagiar@gmail.com" && data.password == "24090082"){
+            alert("Login Berhasil");
+
+            login(data.email);
+
+        // Redirect ke halaman dashboard
+        navigate("/dashboard");
+        } else {
+            alert("Email atau password anda salah!");
+        }
+
     };
 
 
