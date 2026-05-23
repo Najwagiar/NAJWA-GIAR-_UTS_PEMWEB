@@ -60,13 +60,13 @@ export default function CategoryIndex() {
 
       {/* LIST DATA */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-        {categories.map((item: any) => (
+        {categories?.map((item: any) => (
           <div
-            key={item.id}
+            key={item?.id}
             className="bg-pink-100 p-5 rounded-xl shadow border-l-8 border-red-900 relative"
           >
-            <h3 className="text-lg font-bold text-red-900 mb-2">{item.name}</h3>
-            <p className="text-gray-700 mb-4">{item.description}</p>
+            <h3 className="text-lg font-bold text-red-900 mb-2">{item?.name}</h3>
+            <p className="text-gray-700 mb-4">{item?.description}</p>
 
             <div className="flex gap-4">
               <button
