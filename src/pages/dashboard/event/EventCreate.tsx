@@ -180,7 +180,7 @@ export default function EventCreate() {
 
         <input
           type="date"
-          value={dateEvent}
+          value={dateEvent ? dateEvent.split("T")[0] : ""}
           onChange={(e) => setDateEvent(e.target.value)}
           className="w-full border p-2 rounded"
           required
