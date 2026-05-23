@@ -1,21 +1,20 @@
 import { useForm } from "react-hook-form";
 import { InputText } from "../components/ui/InputText";
 import { InputPassword } from "../components/ui/InputPassword";
-
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import Button from "../components/ui/Button";
 import { Link, useNavigate } from "react-router-dom";
-
 import { useAuthStore } from "../store/useAuthStore";
 
+// 1. Ubah Schema: Email jadi NIM (string atau number sesuai kebutuhan)
 const schema = z.object({
-    email: z.string().email({ message: "Email harus diisi dengan benar" }),
+    nim: z.string().min(8, { message: "NIM harus 8 karakter" }),
     password: z.string().min(8, { message: "Password minimal 8 karakter" })
 });
 
 interface FormData {
-    email: string;
+    nim: string;
     password: string;
 }
 
@@ -23,38 +22,30 @@ export default function LoginForm() {
     const navigate = useNavigate();
     const login = useAuthStore((state) => state.login)
 
-    // const [email, setEmail] = useState<string>("");
-    // const [password, setPassword] = useState<string>("");
-    const { register, handleSubmit, formState: { errors },
-    } = useForm<FormData>({
+    const { register, handleSubmit, formState: { errors } } = useForm<FormData>({
         resolver: zodResolver(schema)
     });
 
-
     const onSubmit = (data: FormData) => {
-        console.log(data);
-        if(data.email == "najwagiar@gmail.com" && data.password == "24090082"){
+        // 2. Ubah pengecekan logika (sesuaikan dengan NIM kamu)
+        if(data.nim == "24090082" && data.password == "24090082"){
             alert("Login Berhasil");
-
-            login(data.email);
-
-        // Redirect ke halaman dashboard
-        navigate("/dashboard");
+            login(data.nim); // Simpan NIM ke state auth
+            navigate("/dashboard");
         } else {
-            alert("Email atau password anda salah!");
+            alert("NIM atau password anda salah!");
         }
-
     };
-
 
     return (
         <div>
             <form onSubmit={handleSubmit(onSubmit)}>
+                {/* 3. Ubah InputText menjadi NIM */}
                 <InputText
-                    label="Email"
-                    nama="email"
+                    label="NIM"
+                    nama="nim"
                     register={register}
-                    error={errors.email?.message}
+                    error={errors.nim?.message}
                 />
 
                 <InputPassword
@@ -64,7 +55,6 @@ export default function LoginForm() {
                     error={errors.password?.message}
                 />
 
-
                 <div>
                     <Button label="Login" variant="primary"/>
                 </div>
@@ -73,9 +63,6 @@ export default function LoginForm() {
                     Belum punya akun? <Link to="/register">Daftar Disini</Link>
                 </div>
             </form>
-            {/* <div style={{marginTop: "80px"}}>
-                <DaftarForm/>
-            </div> */}
         </div>
     );
 }

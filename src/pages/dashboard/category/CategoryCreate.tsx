@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useAuthStore } from "../../../store/useAuthStore";
 
 export default function CategoryCreate() {
     const navigate = useNavigate();
@@ -8,9 +7,7 @@ export default function CategoryCreate() {
     const [title, setTitle] = useState("");
     const [description, setDescription] = useState("");
 
-    const addCategory = useAuthStore((state) => state.addCategory);
-
-    const handleSubmit = (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
 
         if (!title || !description) {
@@ -18,25 +15,54 @@ export default function CategoryCreate() {
             return;
         }
 
-        addCategory({
-            title,
-            description,
-        });
+        try {
 
-        navigate("/dashboard/category");
+            const response = await fetch("https://crudnajwagiarekaazzahra-production.up.railway.app/categories", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+
+                body: JSON.stringify({
+                    name: title,
+                    description: description,
+                }),
+            });
+
+            const result = await response.json();
+
+            console.log(result);
+
+            alert("Category berhasil ditambahkan!");
+
+            navigate("/dashboard/category");
+
+        } catch (error) {
+            console.log(error);
+
+            alert("Gagal menambahkan category");
+        }
     };
 
     return (
         <div className="p-6 max-w-md">
+
             <h1 className="text-2xl font-bold mb-2">
                 Tambah Category
             </h1>
 
-            <form onSubmit={handleSubmit} className="space-y-4">
+            <form
+                onSubmit={handleSubmit}
+                className="space-y-4"
+            >
 
                 <div>
-                    <label>Judul</label>
+                    <label className="block mb-1">
+                        Judul
+                    </label>
+
                     <input
+                        type="text"
                         value={title}
                         onChange={(e) => setTitle(e.target.value)}
                         className="w-full border p-2 rounded"
@@ -44,7 +70,10 @@ export default function CategoryCreate() {
                 </div>
 
                 <div>
-                    <label>Deskripsi</label>
+                    <label className="block mb-1">
+                        Deskripsi
+                    </label>
+
                     <textarea
                         value={description}
                         onChange={(e) => setDescription(e.target.value)}
@@ -52,9 +81,13 @@ export default function CategoryCreate() {
                     />
                 </div>
 
-                <button className="bg-red-900 text-white px-4 py-2 rounded">
+                <button
+                    type="submit"
+                    className="bg-red-900 text-white px-4 py-2 rounded"
+                >
                     Simpan
                 </button>
+
             </form>
         </div>
     );
