@@ -12,7 +12,7 @@ export default function CategoryEdit({ id, onClose, onSuccess }: Props) {
   // Ambil data lama
   useEffect(() => {
     fetch(
-      `https://crudnajwagiarekaazzahra-production.up.railway.app/categories/${id}`,
+      `http://localhost:3000/category/${id}`,
     )
       .then((res) => res.json())
       .then((res) => {
@@ -24,7 +24,7 @@ export default function CategoryEdit({ id, onClose, onSuccess }: Props) {
   async function handleUpdate(e: React.FormEvent) {
     e.preventDefault();
     await fetch(
-      `https://crudnajwagiarekaazzahra-production.up.railway.app/categories/${id}`,
+      `http://localhost:3000/category/${id}`,
       {
         method: "PUT",
         headers: { "Content-Type": "application/json" },

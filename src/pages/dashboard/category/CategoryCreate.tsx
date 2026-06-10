@@ -17,7 +17,7 @@ export default function CategoryCreate() {
 
         try {
 
-            const response = await fetch("https://crudnajwagiarekaazzahra-production.up.railway.app/categories", {
+            const response = await fetch("http://localhost:3000/category", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",

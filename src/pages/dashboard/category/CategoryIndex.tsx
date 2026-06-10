@@ -10,7 +10,7 @@ export default function CategoryIndex() {
   // 1. GET DATA CATEGORY
   async function fetchCategories() {
     try {
-      const response = await fetch("https://crudnajwagiarekaazzahra-production.up.railway.app/categories/");
+      const response = await fetch("http://localhost:3000/category/");
       const result = await response.json();
       setCategories(result.data || result);
     } catch (error) {
@@ -29,7 +29,7 @@ export default function CategoryIndex() {
     if (!yakin) return;
 
     try {
-      await fetch(`https://crudnajwagiarekaazzahra-production.up.railway.app/categories/${id}`, {
+      await fetch(`http://localhost:3000/category/${id}`, {
         method: "DELETE",
       });
       alert("Category berhasil dihapus!");
