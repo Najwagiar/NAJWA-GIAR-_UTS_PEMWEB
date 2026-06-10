@@ -12,7 +12,7 @@ export default function PembicaraEdit({ id, onClose, onSuccess }: Props) {
   const [foto, setFoto] = useState("");
 
   useEffect(() => {
-    fetch(`https://crudnajwagiarekaazzahra-production.up.railway.app/speakers/${id}`)
+    fetch(`http://localhost:3000/speakers/${id}`)
       .then((res) => res.json())
       .then((res) => {
         const data = res.data || res;
@@ -26,7 +26,7 @@ export default function PembicaraEdit({ id, onClose, onSuccess }: Props) {
   e.preventDefault();
   
   try {
-    const response = await fetch(`https://crudnajwagiarekaazzahra-production.up.railway.app/speakers/${id}`, {
+    const response = await fetch(`http://localhost:3000/speakers/${id}`, {
       method: "PUT",
       headers: { 
         "Content-Type": "application/json" 

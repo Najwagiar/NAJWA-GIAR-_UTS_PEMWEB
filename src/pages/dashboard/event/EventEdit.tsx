@@ -10,14 +10,14 @@ export default function EventEdit({ id, onClose, onSuccess }: Props) {
   const [formData, setFormData] = useState({ name: "", location: "", dateEvent: "", description: "" });
 
   useEffect(() => {
-    fetch(`https://crudnajwagiarekaazzahra-production.up.railway.app/events/${id}`)
+    fetch(`http://localhost:3000/events/${id}`)
       .then((res) => res.json())
       .then((data) => setFormData(data)); // Sesuaikan jika responnya {data: ...}
   }, [id]);
 
   async function handleUpdate(e: React.FormEvent) {
     e.preventDefault();
-    await fetch(`https://crudnajwagiarekaazzahra-production.up.railway.app/events/${id}`, {
+    await fetch(`http://localhost:3000/events/${id}`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(formData),

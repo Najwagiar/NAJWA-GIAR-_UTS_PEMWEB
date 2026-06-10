@@ -1,66 +1,48 @@
 import { useState, useEffect } from "react";
-
 import { useNavigate } from "react-router-dom";
-
 import { useAuthStore } from "../../../store/useAuthStore";
 
 export default function EventCreate() {
   const navigate = useNavigate();
-
   const addEvent = useAuthStore((state) => state.addEvent);
 
   // State untuk input form
-
   const [name, setName] = useState("");
-
   const [location, setLocation] = useState("");
-
   const [dateEvent, setDateEvent] = useState("");
-
   const [description, setDescription] = useState("");
 
   // State untuk menampung daftar pilihan dari database
-
   const [categories, setCategories] = useState([]);
-
   const [pembicaras, setPembicaras] = useState([]);
 
   // State untuk menyimpan ID yang dipilih user
-
   const [categoryId, setCategoryId] = useState("");
-
   const [pembicaraId, setPembicaraId] = useState("");
 
-  // Ambil data kategori dan pembicara dari API saat halaman dibuka
-
+  // Ambal data kategori dan pembicara dari API saat halaman dibuka
   useEffect(() => {
     async function fetchData() {
       try {
-        // Ambil Kategori
+        const baseUrl = import.meta.env.VITE_API_URL || "http://localhost:3000";
 
-        const resCat = await fetch(
-          "https://crudnajwagiarekaazzahra-production.up.railway.app/categories",
-        );
-
+        
+        const resCat = await fetch(`${baseUrl}/category`);
+        if (!resCat.ok) throw new Error("Gagal mengambil data category");
         const dataCat = await resCat.json();
 
         console.log("Kategori:", dataCat);
+        // Mengamankan data jika backend mengembalikan array langsung atau di dalam object (.data)
+        setCategories(Array.isArray(dataCat) ? dataCat : dataCat.data || []);
 
-        setCategories(dataCat);
-
-        setCategories(dataCat.data || []);
-
-        // Ambil Pembicara
-
-        const resPem = await fetch(
-          "https://crudnajwagiarekaazzahra-production.up.railway.app/speakers",
-        );
-
+        
+        const resPem = await fetch("http://localhost:3000/speakers");
+        if (!resPem.ok) throw new Error("Gagal mengambil data speakers");
         const dataPem = await resPem.json();
 
-        setPembicaras(dataPem.data || dataPem);
+        console.log("Pembicara:", dataPem);
+        setPembicaras(Array.isArray(dataPem) ? dataPem : dataPem.data || []);
 
-        setPembicaras(dataPem);
       } catch (error) {
         console.error("Gagal mengambil data pendukung:", error);
       }
@@ -74,31 +56,24 @@ export default function EventCreate() {
 
     if (!categoryId || !pembicaraId) {
       alert("Silahkan pilih kategori dan pembicara terlebih dahulu");
-
       return;
     }
 
     try {
+      // Fungsi addEvent ini otomatis menembak lokal karena mengikuti useAuthStore yang sudah kamu perbaiki sebelumnya
       await addEvent({
         name,
-
         categoryId: Number(categoryId), // Ubah kembali ke angka saat kirim ke backend
-
         location,
-
         dateEvent,
-
         description,
-
         pembicaraId: Number(pembicaraId), // Ubah kembali ke angka saat kirim ke backend
       });
 
       alert("Event Berhasil Ditambahkan!");
-
       navigate("/dashboard/event");
     } catch (error) {
       console.error(error);
-
       alert("Gagal menambahkan event");
     }
   };
@@ -109,7 +84,6 @@ export default function EventCreate() {
 
       <form onSubmit={handleSubmit} className="space-y-4">
         {/* INPUT NAMA EVENT */}
-
         <input
           type="text"
           placeholder="Nama Event"
@@ -119,13 +93,11 @@ export default function EventCreate() {
           required
         />
 
-        {/* DROPDOWN */}
-
+        {/* DROPDOWN KATEGORI */}
         <div className="space-y-1">
           <label className="text-sm font-semibold text-gray-600">
             Pilih Kategori
           </label>
-
           <select
             value={categoryId}
             onChange={(e) => setCategoryId(e.target.value)}
@@ -133,7 +105,6 @@ export default function EventCreate() {
             required
           >
             <option value="">-- Pilih Kategori --</option>
-
             {categories.map((cat: any) => (
               <option key={cat.id} value={cat.id}>
                 {cat.name}
@@ -142,13 +113,11 @@ export default function EventCreate() {
           </select>
         </div>
 
-        {/* DROPDOWN */}
-
+        {/* DROPDOWN PEMBICARA */}
         <div className="space-y-1">
           <label className="text-sm font-semibold text-gray-600">
             Pilih Pembicara
           </label>
-
           <select
             value={pembicaraId}
             onChange={(e) => setPembicaraId(e.target.value)}
@@ -156,7 +125,6 @@ export default function EventCreate() {
             required
           >
             <option value="">-- Pilih Pembicara --</option>
-
             {pembicaras.map((pem: any) => (
               <option key={pem.id} value={pem.id}>
                 {pem.name}
@@ -166,7 +134,6 @@ export default function EventCreate() {
         </div>
 
         {/* LOKASI */}
-
         <input
           type="text"
           placeholder="Lokasi"
@@ -177,7 +144,6 @@ export default function EventCreate() {
         />
 
         {/* TANGGAL */}
-
         <input
           type="date"
           value={dateEvent ? dateEvent.split("T")[0] : ""}
@@ -187,7 +153,6 @@ export default function EventCreate() {
         />
 
         {/* DESKRIPSI */}
-
         <textarea
           placeholder="Deskripsi"
           value={description}

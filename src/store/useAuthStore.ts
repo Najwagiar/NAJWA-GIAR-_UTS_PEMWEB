@@ -10,6 +10,7 @@ interface Category {
 }
 
 interface Speaker {
+  id?: number; 
   name: string;
   role: string;
   image?: string;
@@ -26,10 +27,10 @@ interface Event {
 }
 
 interface User {
-  id?: number; // Diubah jadi opsional ? karena saat create ID belum ada dari database
+  id?: number; 
   name: string;
   email: string;
-  password?: string; // Tambahkan field password untuk keperluan registrasi/create
+  password?: string; 
   foto?: string;
   role?: string;
 }
@@ -49,8 +50,9 @@ interface AuthState {
 
   /* SPEAKER */
   speakers: Speaker[];
+  fetchSpeakers: () => Promise<void>; 
   addSpeaker: (data: Speaker) => Promise<void>;
-  deleteSpeaker: (index: number) => void;
+  deleteSpeaker: (id: number) => Promise<void>; 
 
   /* EVENT */
   events: any[]; 
@@ -101,6 +103,20 @@ export const useAuthStore = create<AuthState>()(
 
       /* SPEAKER */
       speakers: [],
+
+      fetchSpeakers: async () => {
+        const baseUrl = import.meta.env.VITE_API_URL;
+        try {
+          const response = await fetch(`${baseUrl}/speakers`);
+          if (!response.ok) throw new Error("Gagal fetch data pembicara");
+          const data = await response.json();
+          const speakersData = Array.isArray(data) ? data : data.data || [];
+          set({ speakers: speakersData });
+        } catch (error) {
+          console.error("Gagal fetch speakers", error);
+          set({ speakers: [] });
+        }
+      },
       addSpeaker: async (data) => {
         try {
           const baseUrl = import.meta.env.VITE_API_URL;
@@ -111,14 +127,24 @@ export const useAuthStore = create<AuthState>()(
           });
           if (!response.ok) throw new Error("Gagal tambah speaker");
           const result = await response.json(); 
-          set((state) => ({ speakers: [...state.speakers, result] }));
+          const newSpeaker = result.data || result; // Proteksi pembungkus .data dari API
+          set((state) => ({ speakers: [newSpeaker, ...state.speakers] }));
         } catch (error) {
           console.log(error);
           throw error;
         }
       },
-      deleteSpeaker: (index) =>
-        set((state) => ({ speakers: state.speakers.filter((_, i) => i !== index) })),
+      deleteSpeaker: async (id: number) => {
+        const baseUrl = import.meta.env.VITE_API_URL;
+        try {
+          const response = await fetch(`${baseUrl}/speakers/${id}`, { method: "DELETE" });
+          if (!response.ok) throw new Error("Gagal hapus speaker di server");
+          set((state) => ({ speakers: state.speakers.filter((item) => item.id !== id) }));
+        } catch (error) {
+          console.error(error);
+          alert("Gagal menghapus pembicara");
+        }
+      },
 
       /* EVENT */
       events: [],
@@ -127,7 +153,8 @@ export const useAuthStore = create<AuthState>()(
         try {
           const response = await fetch(`${baseUrl}/events`);
           const data = await response.json();
-          set({ events: data });
+          const eventsData = Array.isArray(data) ? data : data.data || [];
+          set({ events: eventsData });
         } catch (error) {
           console.error("Gagal fetch events", error);
         }
@@ -142,7 +169,7 @@ export const useAuthStore = create<AuthState>()(
           });
           if (!response.ok) throw new Error("Gagal tambah event");
           const result = await response.json();
-          set((state) => ({ events: [...state.events, result.data] }));
+          set((state) => ({ events: [...state.events, result.data || result] }));
           alert("Event berhasil ditambahkan");
         } catch (error) {
           alert("Gagal menambahkan event");
@@ -178,7 +205,7 @@ export const useAuthStore = create<AuthState>()(
           set({ loadingUser: false, users: [] });
         }
       },
-      
+
       addUser: async (data) => {
         try {
           const baseUrl = import.meta.env.VITE_API_URL;
@@ -188,7 +215,6 @@ export const useAuthStore = create<AuthState>()(
             body: JSON.stringify(data),
           });
 
-          // Menangkap pesan error spesifik dari backend (Misal: "Email sudah terdaftar!")
           if (!response.ok) {
             const errorResult = await response.json();
             throw new Error(errorResult.message || "Gagal membuat user baru");
@@ -197,7 +223,6 @@ export const useAuthStore = create<AuthState>()(
           const result = await response.json();
           const newUser = result.data || result;
 
-          // Masukkan user baru ke state lokal biar tabel otomatis bertambah tanpa reload penuh
           set((state) => ({
             users: [newUser, ...state.users],
           }));
@@ -205,7 +230,6 @@ export const useAuthStore = create<AuthState>()(
           alert("User berhasil ditambahkan!");
         } catch (error: any) {
           console.error(error);
-          // Melempar error asli agar ditangkap oleh komponen Form Pembuat User
           throw error;
         }
       },

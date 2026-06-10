@@ -10,7 +10,7 @@ export default function PembicaraIndex() {
 
   async function fetchPembicara() {
     try {
-      const response = await fetch("https://crudnajwagiarekaazzahra-production.up.railway.app/speakers");
+      const response = await fetch("http://localhost:3000/speakers");
       const result = await response.json();
       setSpeakers(result);
     } catch (error) {
@@ -27,7 +27,7 @@ export default function PembicaraIndex() {
     const yakin = confirm("Yakin mau hapus?");
     if (!yakin) return;
     try {
-      await fetch(`https://crudnajwagiarekaazzahra-production.up.railway.app/speakers/${id}`, {
+      await fetch(`http://localhost:3000/speakers/${id}`, {
         method: "DELETE",
       });
       alert("Pembicara berhasil dihapus");

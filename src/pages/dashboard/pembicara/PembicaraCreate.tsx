@@ -3,7 +3,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useNavigate, Link } from "react-router-dom";
 import { InputText } from "../../../components/ui/InputText";
-import { useAuthStore } from "../../../store/useAuthStore";
 
 const schema = z.object({
   name: z.string().min(1, "Nama pembicara harus diisi"),
@@ -21,8 +20,6 @@ type FormData = {
 
 export default function PembicaraCreate() {
   const navigate = useNavigate();
-
-  const addSpeaker = useAuthStore((state) => state.addSpeaker);
 
   const {
     register,
@@ -42,7 +39,18 @@ export default function PembicaraCreate() {
         image: data.image?.trim() || undefined,
       };
 
-      await addSpeaker(payload);
+      const response = await fetch("http://localhost:3000/speakers", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(payload),
+      });
+
+      // Jika server backend mengembalikan error (seperti 500 atau 400)
+      if (!response.ok) {
+        throw new Error("Gagal menyimpan ke server backend");
+      }
 
       alert("Pembicara berhasil ditambahkan");
 

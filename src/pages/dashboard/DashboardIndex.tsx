@@ -1,16 +1,28 @@
 import { useEffect, useState } from "react";
-import { useAuthStore } from "../../store/useAuthStore";
 
 export default function DashboardIndex() {
-  const speakers = useAuthStore((state) => state.speakers);
-  const events = useAuthStore((state) => state.events);
+  const [speakers, setSpeakers] = useState([]);
+  const [events, setEvents] = useState([]);
   const [categories, setCategories] = useState([]);
 
   useEffect(() => {
+    // Fetch Data Category
     fetch("http://localhost:3000/category/")
       .then((res) => res.json())
       .then((data) => setCategories(data.data || data))
-      .catch(() => {});
+      .catch((err) => console.error("Error fetching categories:", err));
+
+    // Fetch Data Pembicara (Sesuaikan URL jika berbeda, misal: /pembicara)
+    fetch("http://localhost:3000/speakers/")
+      .then((res) => res.json())
+      .then((data) => setSpeakers(data.data || data))
+      .catch((err) => console.error("Error fetching speakers:", err));
+
+    // Fetch Data Event
+    fetch("http://localhost:3000/Events/")
+      .then((res) => res.json())
+      .then((data) => setEvents(data.data || data))
+      .catch((err) => console.error("Error fetching events:", err));
   }, []);
 
   return (
