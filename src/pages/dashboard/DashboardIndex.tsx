@@ -7,7 +7,7 @@ export default function DashboardIndex() {
   const [categories, setCategories] = useState([]);
 
   useEffect(() => {
-    fetch("https://crudnajwagiarekaazzahra-production.up.railway.app/categories/")
+    fetch("http://localhost:3000/category/")
       .then((res) => res.json())
       .then((data) => setCategories(data.data || data))
       .catch(() => {});
