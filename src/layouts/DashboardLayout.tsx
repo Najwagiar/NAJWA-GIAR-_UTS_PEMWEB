@@ -97,6 +97,22 @@ export default function DashboardLayout() {
                 Biodata
               </NavLink>
             </li>
+            
+            <li>
+              <NavLink
+                to="/dashboard/user"
+                className={({ isActive }) =>
+                  `block px-4 py-2 rounded-xl transition ${
+                    isActive
+                      ? "bg-rose-700 text-white"
+                      : "text-rose-900 hover:bg-rose-200"
+                  }`
+                }
+              >
+                User
+              </NavLink>
+            </li>
+
           </ul>
         </div>
 

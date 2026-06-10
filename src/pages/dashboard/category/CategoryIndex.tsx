@@ -48,17 +48,22 @@ export default function CategoryIndex() {
 
   return (
     <div className="p-6">
-      <h1 className="text-2xl font-bold mb-2">Category</h1>
-      <p className="mb-6 text-gray-500">Selamat Datang di Halaman Category</p>
+      <div className="flex justify-between items-start mb-6">
+        <div>
+          <h1 className="text-2xl font-bold mb-2">Category</h1>
+          <p className="text-gray-500">Selamat Datang di Halaman Category</p>
+        </div>
 
-      <Link
-        to="/dashboard/category/create"
-        className="inline-block mb-6 px-4 py-2 bg-red-900 text-white rounded-lg"
-      >
-        + Tambah Category
-      </Link>
+        {/* Tombol digeser ke kanan atas secara natural tanpa terpisah kotak baru */}
+        <Link
+          to="/dashboard/category/create"
+          className="bg-red-900 hover:bg-red-950 text-white px-4 py-2 rounded-lg font-semibold text-sm transition-colors"
+        >
+          + Tambah Category
+        </Link>
+      </div>
 
-      {/* LIST DATA */}
+      {/* LIST DATA GRID */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
         {categories?.map((item: any) => (
           <div
@@ -87,7 +92,7 @@ export default function CategoryIndex() {
         ))}
       </div>
 
-      {/* MODAL EDIT  */}
+      {/* MODAL EDIT */}
       {isEditOpen && editingId !== null && (
         <CategoryEdit
           id={editingId}

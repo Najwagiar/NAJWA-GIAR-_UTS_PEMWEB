@@ -26,22 +26,28 @@ export default function EventIndex() {
 
   return (
     <div className="p-6">
-      <h1 className="text-2xl font-bold mb-2">Event</h1>
-      <p className="mb-6 text-gray-500">Selamat Datang di Halaman Event</p>
+      <div className="flex justify-between items-start mb-6">
+        <div>
+          <h1 className="text-2xl font-bold mb-2">Event</h1>
+          <p className="text-gray-500">Selamat Datang di Halaman Event</p>
+        </div>
 
-      <Link
-        to="/dashboard/event/create"
-        className="inline-block mb-6 px-4 py-2 bg-red-900 text-white rounded"
-      >
-        + Tambah Event
-      </Link>
+        {/* Tombol digeser ke kanan atas secara natural */}
+        <Link
+          to="/dashboard/event/create"
+          className="bg-red-900 hover:bg-red-950 text-white px-4 py-2 rounded-lg font-semibold text-sm transition-colors"
+        >
+          + Tambah Event
+        </Link>
+      </div>
 
+      {/* GRID LAYOUT DATA EVENT */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         {events.length > 0 ? (
           events.map((item: any) => (
             <div
               key={item.id}
-              className="bg-pink-100 p-4 rounded shadow border-l-4 border-red-900"
+              className="bg-pink-100 p-4 rounded-xl shadow border-l-8 border-red-900"
             >
               <h3 className="font-bold text-red-900 text-lg">{item.name}</h3>
               <p className="text-sm">Lokasi: {item.location}</p>
@@ -65,7 +71,7 @@ export default function EventIndex() {
             </div>
           ))
         ) : (
-          <p className="text-gray-500">Tidak ada event yang ditemukan.</p>
+          <p className="text-gray-500 italic">Tidak ada event yang ditemukan.</p>
         )}
       </div>
 
